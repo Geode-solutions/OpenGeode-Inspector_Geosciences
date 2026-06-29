@@ -20,16 +20,16 @@
 
 add_subdirectory(src)
 
-if(OPENGEODE_MYMODULE_WITH_TESTS)
+if(OPENGEODE_INSPECTOR_GEOSCIENCES_WITH_TESTS)
     add_subdirectory(tests)
 endif()
 
 add_geode_python_wheel(
-    NAME "OpenGeode-ModuleTemplate"
+    NAME "OpenGeode-Inspector_Geosciences"
     DESCRIPTION 
-        "Open source framework for representing and manipulating geometric models"
+        "Open source inspector for Geosciences objects"
     MODULES
-        "mylib.py"
+        "inspection.py"
     LICENSE "MIT"
 )
 

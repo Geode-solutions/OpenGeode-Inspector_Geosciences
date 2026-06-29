@@ -20,12 +20,20 @@
 
 cmake_minimum_required(VERSION 3.15)
     
-if(NOT TARGET OpenGeode-MyModule::mylib)
-    project(OpenGeode-MyModule CXX)
+if(NOT TARGET OpenGeode-Inspector_Geosciences::inspection)
+    project(OpenGeode-Inspector_Geosciences CXX)
     find_package(OpenGeode REQUIRED CONFIG)
-    find_package(OpenGeode-MyModule REQUIRED CONFIG)
+    find_package(OpenGeode-Inspector_Geosciences REQUIRED CONFIG)
+    find_package(OpenGeode-Geosciences REQUIRED)
+    find_package(OpenGeode-GeosciencesIO REQUIRED)
     enable_testing()
 endif()
 
-add_subdirectory(mylib)
+set(DATA_DIRECTORY ${CMAKE_CURRENT_LIST_DIR}/data)
+set(test_config_file_in ${CMAKE_CURRENT_LIST_DIR}/tests_config.hpp.in)
+set(test_config_file ${PROJECT_BINARY_DIR}/geode/tests_config.hpp)
+configure_file(${test_config_file_in} ${test_config_file})
+include_directories(${PROJECT_BINARY_DIR})
+
+add_subdirectory(inspection)
 
