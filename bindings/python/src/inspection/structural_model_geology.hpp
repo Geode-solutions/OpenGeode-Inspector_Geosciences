@@ -23,6 +23,8 @@
 
 #include <geode/geosciences/explicit/representation/core/structural_model.hpp>
 
+#include <geode/model/mixin/core/component_type.hpp>
+
 #include <geode/inspector_geosciences/inspection/geology/structural_model_geology.hpp>
 
 namespace geode

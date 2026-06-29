@@ -145,9 +145,8 @@ namespace geode
         }
 
         template < typename Model >
-        bool opengeode_inspector_geosciences_inspection_api
-            model_geological_components_are_linked_to_geometry(
-                const Model& model )
+        bool model_geological_components_are_linked_to_geometry(
+            const Model& model )
         {
             for( const auto& fault_block : model.fault_blocks() )
             {
