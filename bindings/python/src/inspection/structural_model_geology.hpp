@@ -37,7 +37,7 @@ namespace geode
                 &InspectionIssues< ComponentID >::set_description )
             .def( "description", &InspectionIssues< ComponentID >::description )
             .def( "nb_issues", &InspectionIssues< ComponentID >::nb_issues )
-            .def( "issues", &InspectionIssues< ComponentID >::issues )
+            // .def( "issues", &InspectionIssues< ComponentID >::issues )
             .def( "string", &InspectionIssues< ComponentID >::string );
 
         pybind11::class_< StructuralModelGeologyInspectionResult >(

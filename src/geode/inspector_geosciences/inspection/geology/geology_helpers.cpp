@@ -180,9 +180,8 @@ namespace geode
         }
 
         template < typename Model >
-        void opengeode_inspector_geosciences_inspection_api
-            add_model_geological_components_not_linked_to_geometry(
-                const Model& model, InspectionIssues< ComponentID >& issues )
+        void add_model_geological_components_not_linked_to_geometry(
+            const Model& model, InspectionIssues< ComponentID >& issues )
         {
             for( const auto& fault_block : model.fault_blocks() )
             {
@@ -241,25 +240,21 @@ namespace geode
         }
 
         template bool opengeode_inspector_geosciences_inspection_api
-            is_geological_collection< 2 >(
-                const ComponentType& component_type );
+            is_geological_collection< 2 >( const ComponentType& );
         template bool opengeode_inspector_geosciences_inspection_api
-            is_geological_collection< 3 >(
-                const ComponentType& component_type );
+            is_geological_collection< 3 >( const ComponentType& );
 
         template bool opengeode_inspector_geosciences_inspection_api
             model_geological_components_are_linked_to_geometry(
-                const StructuralModel& model );
+                const StructuralModel& );
         template bool opengeode_inspector_geosciences_inspection_api
             model_geological_components_are_linked_to_geometry(
-                const CrossSection& model );
+                const CrossSection& );
         template void opengeode_inspector_geosciences_inspection_api
             add_model_geological_components_not_linked_to_geometry(
-                const StructuralModel& model,
-                InspectionIssues< ComponentID >& issues );
+                const StructuralModel&, InspectionIssues< ComponentID >& );
         template void opengeode_inspector_geosciences_inspection_api
             add_model_geological_components_not_linked_to_geometry(
-                const CrossSection& model,
-                InspectionIssues< ComponentID >& issues );
+                const CrossSection&, InspectionIssues< ComponentID >& );
     } // namespace internal
 } // namespace geode
