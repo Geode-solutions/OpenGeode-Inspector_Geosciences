@@ -61,7 +61,8 @@ namespace geode
     /*!
      * Class for inspecting the geology of a StructuralModel model corners
      */
-    class opengeode_inspector_inspection_api StructuralModelGeologyInspector
+    class
+        opengeode_inspector_geosciences_inspection_api StructuralModelGeologyInspector
     {
         OPENGEODE_DISABLE_COPY( StructuralModelGeologyInspector );
 

@@ -29,7 +29,7 @@ add_geode_python_wheel(
     DESCRIPTION 
         "Open source inspector for Geosciences objects"
     MODULES
-        "inspection.py"
+        "geosciences_inspection.py"
     LICENSE "MIT"
 )
 

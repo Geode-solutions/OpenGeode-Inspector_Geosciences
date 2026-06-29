@@ -35,6 +35,7 @@ namespace geode
             .def_readwrite( "brep", &StructuralModelInspectionResult::brep )
             .def_readwrite(
                 "geology", &StructuralModelInspectionResult::geology )
+            .def( "nb_issues", &StructuralModelInspectionResult::nb_issues )
             .def( "string", &StructuralModelInspectionResult::string )
             .def( "inspection_type",
                 &StructuralModelInspectionResult::inspection_type );

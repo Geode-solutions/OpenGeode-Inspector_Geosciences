@@ -51,10 +51,10 @@ namespace geode
      * Class for inspecting a StructuralModel
      * @extends StructuralModelTopologyInspector
      */
-    class opengeode_inspector_inspection_api StructuralModelInspector
-        : public AddInspectors< StructuralModel,
-              BRepInspector,
-              StructuralModelGeologyInspector >
+    class opengeode_inspector_geosciences_inspection_api
+        StructuralModelInspector : public AddInspectors< StructuralModel,
+                                       BRepInspector,
+                                       StructuralModelGeologyInspector >
     {
         OPENGEODE_DISABLE_COPY( StructuralModelInspector );
 

@@ -4,6 +4,7 @@
 
 import opengeode
 import opengeode_geosciences
+import opengeode_inspector
 
 from opengeode_inspector_geosciences_py_inspection import *
 OpenGeodeInspectorGeosciencesInspectionLibrary.initialize()

@@ -23,15 +23,18 @@
 
 #include <pybind11/pybind11.h>
 
-#include "structural_model_inspector.hpp"
+#include "structural_model_geology.hpp"
+#include "structural_model_inspection.hpp"
 
 PYBIND11_MODULE( opengeode_inspector_geosciences_py_inspection, module )
 {
     module.doc() = "OpenGeode-Inspector_Geosciences Python binding for model";
+    pybind11::module::import( "opengeode_inspector" );
     pybind11::class_< geode::OpenGeodeInspectorGeosciencesInspectionLibrary >(
         module, "OpenGeodeInspectorGeosciencesInspectionLibrary" )
         .def( "initialize",
             &geode::OpenGeodeInspectorGeosciencesInspectionLibrary::
                 initialize );
+    geode::define_structural_model_geology_inspector( module );
     geode::define_structural_model_inspector( module );
 }

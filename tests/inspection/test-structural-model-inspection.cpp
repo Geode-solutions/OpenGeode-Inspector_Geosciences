@@ -77,7 +77,8 @@ void check_implicit_model()
         expected_nb_v0_issues, " geological issues, not ",
         v0_result.geology.nb_issues() );
     geode::OpenGeodeInspectorGeosciencesInspectionException::test(
-        v0_result.geology.components_not_part_of_geology.nb_issues() == 10,
+        v0_result.geology.components_not_part_of_geology.nb_issues()
+            == expected_nb_v0_issues,
         "[Test] mss_from_implicit_modeling_v0 issues should be surfaces not "
         "part of any geological components, not:\n",
         v0_result.geology.string() );

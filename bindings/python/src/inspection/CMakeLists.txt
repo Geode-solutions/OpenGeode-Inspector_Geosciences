@@ -21,9 +21,11 @@
 add_geode_python_binding(
     NAME "py_inspection"
     SOURCES
-        "inspection.cpp"
-        "structural_model_inspector.hpp"
+        "geology_inspection.cpp"
+        "structural_model_geology.hpp"
+        "structural_model_inspection.hpp"
     DEPENDENCIES
         OpenGeode-Geosciences::explicit
+        OpenGeode-Inspector::inspection
         ${PROJECT_NAME}::inspection
 )
