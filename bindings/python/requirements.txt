@@ -11,5 +11,5 @@ opengeode-core==17.*,>=17.3.5
     #   opengeode-inspector
 opengeode-geosciences==9.*,>=9.6.0
     # via -r bindings/python/requirements.in
-opengeode-inspector==6.*,>=6.11.2
+opengeode-inspector==6.*,>=6.11.3rc1
     # via -r bindings/python/requirements.in
