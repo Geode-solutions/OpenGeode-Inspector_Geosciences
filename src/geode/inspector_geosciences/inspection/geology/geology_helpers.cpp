@@ -107,7 +107,7 @@ namespace geode
             model_geometrical_components_are_linked_to_geology(
                 const CrossSection& model )
         {
-            return components_are_linked_to_geology_base( model );
+            return ::components_are_linked_to_geology_base( model );
         }
 
         template <>
@@ -126,9 +126,9 @@ namespace geode
                 const CrossSection& model,
                 InspectionIssues< ComponentID >& issues )
         {
-            add_components_not_linked_to_geology(
+            ::add_components_not_linked_to_geology(
                 model, issues, model.lines() );
-            add_components_not_linked_to_geology(
+            ::add_components_not_linked_to_geology(
                 model, issues, model.surfaces() );
         }
 
@@ -138,7 +138,7 @@ namespace geode
                 const StructuralModel& model,
                 InspectionIssues< ComponentID >& issues )
         {
-            add_components_not_linked_to_geology(
+            ::add_components_not_linked_to_geology(
                 model, issues, model.surfaces() );
             ::add_components_not_linked_to_geology(
                 model, issues, model.blocks() );

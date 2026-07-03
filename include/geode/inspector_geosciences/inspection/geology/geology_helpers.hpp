@@ -35,8 +35,8 @@
 
 namespace geode
 {
-    class StructuralModel;
     class CrossSection;
+    class StructuralModel;
 } // namespace geode
 
 namespace geode

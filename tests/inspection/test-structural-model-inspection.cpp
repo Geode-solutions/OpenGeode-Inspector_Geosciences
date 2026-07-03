@@ -26,6 +26,10 @@
 #include <geode/basic/assert.hpp>
 #include <geode/basic/logger.hpp>
 
+#include <geode/model/mixin/core/block.hpp>
+
+#include <geode/geosciences/explicit/mixin/core/fault_block.hpp>
+#include <geode/geosciences/explicit/representation/builder/structural_model_builder.hpp>
 #include <geode/geosciences/explicit/representation/core/structural_model.hpp>
 #include <geode/geosciences/explicit/representation/io/structural_model_input.hpp>
 #include <geode/geosciences/implicit/representation/core/implicit_structural_model.hpp>
@@ -44,7 +48,8 @@ void check_model_A2()
         result.brep.nb_issues() == expected_nb_brep_issues,
         "[Test] modelA2 should have ", expected_nb_brep_issues,
         " brep issues, not ", result.brep.nb_issues() );
-    const geode::index_t expected_nb_geology_issues{ 14 };
+    const geode::index_t expected_nb_geology_issues{ model.nb_blocks() * 2
+                                                     + 2 };
     if( result.geology.nb_issues() != expected_nb_geology_issues )
     {
         geode::Logger::debug(
@@ -65,7 +70,7 @@ void check_implicit_model()
     geode::OpenGeodeInspectorGeosciencesInspectionException::test(
         v0_result.brep.nb_issues() == 0,
         "[Test] mss_from_implicit_modeling_v0 should have no brep issues" );
-    const geode::index_t expected_nb_v0_issues{ 10 };
+    const geode::index_t expected_nb_v0_issues{ 10 + model_v0.nb_blocks() };
     if( v0_result.geology.nb_issues() != expected_nb_v0_issues )
     {
         geode::Logger::debug(
@@ -82,14 +87,15 @@ void check_implicit_model()
         "[Test] mss_from_implicit_modeling_v0 issues should be surfaces not "
         "part of any geological components, not:\n",
         v0_result.geology.string() );
-    const auto model_v1 = geode::load_implicit_structural_model( absl::StrCat(
+
+    auto model_v1 = geode::load_implicit_structural_model( absl::StrCat(
         geode::DATA_PATH, "mss_from_implicit_modeling_v1.og_istrm" ) );
     const geode::StructuralModelInspector v1_inspector{ model_v1 };
     const auto v1_result = v1_inspector.inspect_structural_model();
     geode::OpenGeodeInspectorGeosciencesInspectionException::test(
         v1_result.brep.nb_issues() == 0,
         "[Test] mss_from_implicit_modeling_v1 should have no brep issues" );
-    const geode::index_t expected_nb_v1_issues{ 0 };
+    const geode::index_t expected_nb_v1_issues{ model_v1.nb_blocks() };
     if( v1_result.geology.nb_issues() != expected_nb_v1_issues )
     {
         geode::Logger::debug(
@@ -100,6 +106,40 @@ void check_implicit_model()
         "[Test] mss_from_implicit_modeling_v1 should have ",
         expected_nb_v1_issues, " geological issues, not ",
         v1_result.geology.nb_issues() );
+
+    geode::StructuralModelBuilder v1_builder{ model_v1 };
+    const auto& first_fb_id = v1_builder.add_fault_block();
+    v1_builder.set_fault_block_name( first_fb_id, "Region_1" );
+    const auto& first_fb = model_v1.fault_block( first_fb_id );
+    const auto& second_fb_id = v1_builder.add_fault_block();
+    v1_builder.set_fault_block_name( second_fb_id, "Region_2" );
+    const auto& second_fb = model_v1.fault_block( second_fb_id );
+    for( const auto& block : model_v1.blocks() )
+    {
+        if( block.name().value_or( "" ) == "Region_1" )
+        {
+            v1_builder.add_block_in_fault_block( block, first_fb );
+        }
+        else if( block.name().value_or( "" ) == "Region_2" )
+        {
+            v1_builder.add_block_in_fault_block( block, second_fb );
+        }
+    }
+    const auto v2_result = v1_inspector.inspect_structural_model();
+    geode::OpenGeodeInspectorGeosciencesInspectionException::test(
+        v2_result.brep.nb_issues() == 0,
+        "[Test] mss_from_implicit_modeling_v2 should have no brep issues" );
+    const geode::index_t expected_nb_v2_issues{ 0 };
+    if( v2_result.geology.nb_issues() != expected_nb_v2_issues )
+    {
+        geode::Logger::debug(
+            "[Test] Problematic issues:\n", v2_result.geology.string() );
+    }
+    geode::OpenGeodeInspectorGeosciencesInspectionException::test(
+        v2_result.geology.nb_issues() == expected_nb_v2_issues,
+        "[Test] mss_from_implicit_modeling_v1 should have ",
+        expected_nb_v2_issues, " geological issues after fix, not ",
+        v2_result.geology.nb_issues() );
 }
 
 int main()
