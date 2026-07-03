@@ -18,31 +18,50 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
-add_geode_library(
-    NAME inspection
-    FOLDER "geode/inspector_geosciences/inspection"
-    SOURCES
-        "geology/geology_helpers.cpp"
-        "geology/cross_section_geology.cpp"
-        "geology/structural_model_geology.cpp"
-        "common.cpp"
-        "cross_section_inspection.cpp"
-        "structural_model_inspection.cpp"
-    PUBLIC_HEADERS
-        "geology/cross_section_geology.hpp"
-        "geology/structural_model_geology.hpp"
-        "common.hpp"
-        "cross_section_inspection.hpp"
-        "structural_model_inspection.hpp"
-    INTERNAL_HEADERS
-        "geology/geology_helpers.hpp"
-    PUBLIC_DEPENDENCIES
+add_geode_binary(
+    SOURCE "geode-inspector-cross-section.cpp"
+    DEPENDENCIES
+        absl::flags
+        absl::flags_parse
+        absl::flags_usage
         OpenGeode::basic
-        OpenGeode-Inspector::inspection
-    PRIVATE_DEPENDENCIES
-        OpenGeode::mesh
-        OpenGeode::model
         OpenGeode-Geosciences::explicit
-        OpenGeode-Geosciences::implicit
+        OpenGeode-GeosciencesIO::model
+        ${PROJECT_NAME}::inspection
 )
 
+add_geode_binary(
+    SOURCE "geode-inspector-implicit-cross-section.cpp"
+    DEPENDENCIES
+        absl::flags
+        absl::flags_parse
+        absl::flags_usage
+        OpenGeode::basic
+        OpenGeode-Geosciences::implicit
+        OpenGeode-GeosciencesIO::model
+        ${PROJECT_NAME}::inspection
+)
+
+add_geode_binary(
+    SOURCE "geode-inspector-implicit-structural-model.cpp"
+    DEPENDENCIES
+        absl::flags
+        absl::flags_parse
+        absl::flags_usage
+        OpenGeode::basic
+        OpenGeode-Geosciences::implicit
+        OpenGeode-GeosciencesIO::model
+        ${PROJECT_NAME}::inspection
+)
+
+add_geode_binary(
+    SOURCE "geode-inspector-structural-model.cpp"
+    DEPENDENCIES
+        absl::flags
+        absl::flags_parse
+        absl::flags_usage
+        OpenGeode::basic
+        OpenGeode-Geosciences::explicit
+        OpenGeode-GeosciencesIO::model
+        ${PROJECT_NAME}::inspection
+)

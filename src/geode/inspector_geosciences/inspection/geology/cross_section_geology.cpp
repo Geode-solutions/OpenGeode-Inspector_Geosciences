@@ -21,46 +21,45 @@
  *
  */
 
-#include <geode/inspector_geosciences/inspection/geology/structural_model_geology.hpp>
+#include <geode/inspector_geosciences/inspection/geology/cross_section_geology.hpp>
 
 #include <geode/basic/logger.hpp>
 #include <geode/basic/pimpl_impl.hpp>
 
-#include <geode/model/mixin/core/block.hpp>
 #include <geode/model/mixin/core/corner.hpp>
 #include <geode/model/mixin/core/line.hpp>
 #include <geode/model/mixin/core/surface.hpp>
 
-#include <geode/geosciences/explicit/representation/core/structural_model.hpp>
+#include <geode/geosciences/explicit/representation/core/cross_section.hpp>
 
 #include <geode/inspector_geosciences/inspection/geology/geology_helpers.hpp>
 
 namespace geode
 {
-    index_t StructuralModelGeologyInspectionResult::nb_issues() const
+    index_t CrossSectionGeologyInspectionResult::nb_issues() const
     {
         return components_not_part_of_geology.nb_issues()
                + empty_geological_components.nb_issues()
                + invalid_horizons.nb_issues();
     }
 
-    std::string StructuralModelGeologyInspectionResult::string() const
+    std::string CrossSectionGeologyInspectionResult::string() const
     {
         return absl::StrCat( components_not_part_of_geology.string(),
             empty_geological_components.string(), invalid_horizons.string() );
     }
 
-    std::string StructuralModelGeologyInspectionResult::inspection_type() const
+    std::string CrossSectionGeologyInspectionResult::inspection_type() const
     {
         return "Model geology inspection";
     }
 
-    class StructuralModelGeologyInspector::Impl
+    class CrossSectionGeologyInspector::Impl
     {
     public:
-        Impl( const StructuralModel& model ) : model_( model ) {}
+        Impl( const CrossSection& model ) : model_( model ) {}
 
-        [[nodiscard]] bool structural_model_geology_is_valid() const
+        [[nodiscard]] bool cross_section_geology_is_valid() const
         {
             return geometrical_components_are_linked_to_geology()
                    && geological_components_are_linked_to_geometry()
@@ -69,8 +68,8 @@ namespace geode
 
         [[nodiscard]] bool geometrical_components_are_linked_to_geology() const
         {
-            return internal::model_geometrical_components_are_linked_to_geology(
-                model_ );
+            return internal::model_geometrical_components_are_linked_to_geology<
+                CrossSection >( model_ );
         }
 
         [[nodiscard]] bool geological_components_are_linked_to_geometry() const
@@ -91,10 +90,10 @@ namespace geode
             return true;
         }
 
-        [[nodiscard]] StructuralModelGeologyInspectionResult
-            inspect_structural_model_geology() const
+        [[nodiscard]] CrossSectionGeologyInspectionResult
+            inspect_cross_section_geology() const
         {
-            StructuralModelGeologyInspectionResult result;
+            CrossSectionGeologyInspectionResult result;
             internal::add_model_geometrical_components_not_linked_to_geology(
                 model_, result.components_not_part_of_geology );
             internal::add_model_geological_components_not_linked_to_geometry(
@@ -112,32 +111,32 @@ namespace geode
 
     private:
         std::optional< std::string > horizon_invalidity(
-            const Horizon3D& horizon ) const
+            const Horizon2D& horizon ) const
         {
-            for( const auto& surface : model_.horizon_items( horizon ) )
+            for( const auto& line : model_.horizon_items( horizon ) )
             {
-                if( model_.is_closed( surface ) )
+                if( model_.is_closed( line ) )
                 {
                     return absl::StrCat( "Horizon ",
                         internal::component_identification_to_string( horizon ),
-                        " is invalid: it contains Surface ",
-                        internal::component_identification_to_string( surface ),
+                        " is invalid: it contains Line ",
+                        internal::component_identification_to_string( line ),
                         " which is closed" );
                 }
-                /// Surface has no free borders
-                for( const auto& line : model_.boundaries( surface ) )
+                /// Line has no free borders
+                for( const auto& corner : model_.boundaries( line ) )
                 {
-                    if( model_.nb_incidences( line.id() ) == 1 )
+                    if( model_.nb_incidences( corner.id() ) == 1 )
                     {
                         return absl::StrCat( "Horizon ",
                             internal::component_identification_to_string(
                                 horizon ),
-                            " is invalid: it contains Surface ",
+                            " is invalid: it contains Line ",
                             internal::component_identification_to_string(
-                                surface ),
-                            " which has a free border on Line ",
+                                line ),
+                            " which has a free border on Corner ",
                             internal::component_identification_to_string(
-                                line ) );
+                                corner ) );
                     }
                 }
             }
@@ -145,45 +144,42 @@ namespace geode
         }
 
     private:
-        const StructuralModel& model_;
+        const CrossSection& model_;
     };
 
-    StructuralModelGeologyInspector::StructuralModelGeologyInspector(
-        const StructuralModel& model )
+    CrossSectionGeologyInspector::CrossSectionGeologyInspector(
+        const CrossSection& model )
         : impl_( model )
     {
     }
 
-    StructuralModelGeologyInspector::~StructuralModelGeologyInspector() =
-        default;
+    CrossSectionGeologyInspector::~CrossSectionGeologyInspector() = default;
 
-    bool StructuralModelGeologyInspector::structural_model_geology_is_valid()
-        const
+    bool CrossSectionGeologyInspector::cross_section_geology_is_valid() const
     {
-        return impl_->structural_model_geology_is_valid();
+        return impl_->cross_section_geology_is_valid();
     }
 
-    bool StructuralModelGeologyInspector::
+    bool CrossSectionGeologyInspector::
         geometrical_components_are_linked_to_geology() const
     {
         return impl_->geometrical_components_are_linked_to_geology();
     }
 
-    bool StructuralModelGeologyInspector::
+    bool CrossSectionGeologyInspector::
         geological_components_are_linked_to_geometry() const
     {
         return impl_->geological_components_are_linked_to_geometry();
     }
 
-    bool StructuralModelGeologyInspector::horizons_are_valid() const
+    bool CrossSectionGeologyInspector::horizons_are_valid() const
     {
         return impl_->horizons_are_valid();
     }
 
-    StructuralModelGeologyInspectionResult
-        StructuralModelGeologyInspector::inspect_structural_model_geology()
-            const
+    CrossSectionGeologyInspectionResult
+        CrossSectionGeologyInspector::inspect_cross_section_geology() const
     {
-        return impl_->inspect_structural_model_geology();
+        return impl_->inspect_cross_section_geology();
     }
 } // namespace geode
