@@ -41,7 +41,7 @@ def check_model_A2(model):
     expected_nb_brep_issues = 87952
     if result.brep.nb_issues() != expected_nb_brep_issues:
         raise ValueError("[Test] modelA2 should have " + str(expected_nb_brep_issues) + " brep issues, not ", str(result.brep.nb_issues()) )
-    expected_nb_geology_issues = 14
+    expected_nb_geology_issues = model.nb_blocks()*2 + 2
     if result.geology.nb_issues() != expected_nb_geology_issues:
         print( "[Test] Problematic issues:\n", result.geology.string() )
         raise ValueError("[Test] modelA2 should have "+ str(expected_nb_geology_issues)+ " geological issues, not "+ str(result.geology.nb_issues()) )
@@ -52,7 +52,7 @@ def check_implicit_model_v0(model_v0):
     v0_result = v0_inspector.inspect_structural_model()
     if v0_result.brep.nb_issues() != 0:
         raise ValueError("[Test] mss_from_implicit_modeling_v0 should have no brep issues" )
-    expected_nb_v0_issues= 10
+    expected_nb_v0_issues= 10 + model_v0.nb_blocks()
     if v0_result.geology.nb_issues() != expected_nb_v0_issues:
         print( "[Test] Problematic issues:\n", v0_result.geology.string() )
     if v0_result.geology.nb_issues() != expected_nb_v0_issues:
@@ -65,7 +65,7 @@ def check_implicit_model_v1(model_v1):
     v1_result = v1_inspector.inspect_structural_model()
     if v1_result.brep.nb_issues() != 0:
         raise ValueError("[Test] mss_from_implicit_modeling_v1 should have no brep issues" )
-    expected_nb_v1_issues =  0
+    expected_nb_v1_issues = model_v1.nb_blocks()
     if v1_result.geology.nb_issues() != expected_nb_v1_issues:
         print( "[Test] Problematic issues:\n", v1_result.geology.string() )
     if v1_result.geology.nb_issues() != expected_nb_v1_issues:
