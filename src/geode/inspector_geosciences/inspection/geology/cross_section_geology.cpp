@@ -68,6 +68,13 @@ namespace geode
 
         [[nodiscard]] bool geometrical_components_are_linked_to_geology() const
         {
+            for( const auto& surface : model_.surfaces() )
+            {
+                if( !surface_is_in_a_fault_block( surface ) )
+                {
+                    return false;
+                }
+            }
             return internal::model_geometrical_components_are_linked_to_geology<
                 CrossSection >( model_ );
         }
@@ -96,6 +103,18 @@ namespace geode
             CrossSectionGeologyInspectionResult result;
             internal::add_model_geometrical_components_not_linked_to_geology(
                 model_, result.components_not_part_of_geology );
+            for( const auto& surface : model_.surfaces() )
+            {
+                if( !surface_is_in_a_fault_block( surface ) )
+                {
+                    result.components_not_part_of_geology.add_issue(
+                        surface.component_id(),
+                        absl::StrCat( "Surface ",
+                            internal::component_identification_to_string(
+                                surface ),
+                            " is not part of any FaultBlock " ) );
+                }
+            }
             internal::add_model_geological_components_not_linked_to_geometry(
                 model_, result.empty_geological_components );
             for( const auto& horizon : model_.horizons() )
@@ -141,6 +160,18 @@ namespace geode
                 }
             }
             return std::nullopt;
+        }
+
+        bool surface_is_in_a_fault_block( const Surface2D& surface ) const
+        {
+            for( const auto& collection : model_.collections( surface.id() ) )
+            {
+                if( collection.type() == FaultBlock2D::component_type_static() )
+                {
+                    return true;
+                }
+            }
+            return false;
         }
 
     private:

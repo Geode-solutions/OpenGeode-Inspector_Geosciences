@@ -69,6 +69,13 @@ namespace geode
 
         [[nodiscard]] bool geometrical_components_are_linked_to_geology() const
         {
+            for( const auto& block : model_.blocks() )
+            {
+                if( !block_is_in_a_fault_block( block ) )
+                {
+                    return false;
+                }
+            }
             return internal::model_geometrical_components_are_linked_to_geology(
                 model_ );
         }
@@ -97,6 +104,18 @@ namespace geode
             StructuralModelGeologyInspectionResult result;
             internal::add_model_geometrical_components_not_linked_to_geology(
                 model_, result.components_not_part_of_geology );
+            for( const auto& block : model_.blocks() )
+            {
+                if( !block_is_in_a_fault_block( block ) )
+                {
+                    result.components_not_part_of_geology.add_issue(
+                        block.component_id(),
+                        absl::StrCat( "Block ",
+                            internal::component_identification_to_string(
+                                block ),
+                            " is not part of any FaultBlock " ) );
+                }
+            }
             internal::add_model_geological_components_not_linked_to_geometry(
                 model_, result.empty_geological_components );
             for( const auto& horizon : model_.horizons() )
@@ -142,6 +161,18 @@ namespace geode
                 }
             }
             return std::nullopt;
+        }
+
+        bool block_is_in_a_fault_block( const Block3D& block ) const
+        {
+            for( const auto& collection : model_.collections( block.id() ) )
+            {
+                if( collection.type() == FaultBlock3D::component_type_static() )
+                {
+                    return true;
+                }
+            }
+            return false;
         }
 
     private:
