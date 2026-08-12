@@ -109,11 +109,12 @@ void check_implicit_model()
 
     geode::StructuralModelBuilder v1_builder{ model_v1 };
     const auto& first_fb_id = v1_builder.add_fault_block();
-    v1_builder.set_fault_block_name( first_fb_id, "Region_1" );
     const auto& first_fb = model_v1.fault_block( first_fb_id );
+    v1_builder.set_fault_block_name( first_fb, "Region_1" );
     const auto& second_fb_id = v1_builder.add_fault_block();
-    v1_builder.set_fault_block_name( second_fb_id, "Region_2" );
     const auto& second_fb = model_v1.fault_block( second_fb_id );
+    v1_builder.set_fault_block_name( second_fb, "Region_2" );
+
     for( const auto& block : model_v1.blocks() )
     {
         if( block.name().value_or( "" ) == "Region_1" )
