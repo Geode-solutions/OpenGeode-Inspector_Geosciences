@@ -166,7 +166,7 @@ namespace geode
         {
             for( const auto& collection : model_.collections( surface.id() ) )
             {
-                if( collection.type() == FaultBlock2D::component_type_static() )
+                if( collection.type == FaultBlock2D::component_type_static() )
                 {
                     return true;
                 }

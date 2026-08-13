@@ -167,7 +167,7 @@ namespace geode
         {
             for( const auto& collection : model_.collections( block.id() ) )
             {
-                if( collection.type() == FaultBlock3D::component_type_static() )
+                if( collection.type == FaultBlock3D::component_type_static() )
                 {
                     return true;
                 }
