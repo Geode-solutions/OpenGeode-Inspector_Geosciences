@@ -45,8 +45,8 @@ namespace
         for( const auto& collection : model.collections( component_id ) )
         {
             if( geode::internal::is_geological_collection< Model::dim >(
-                    collection.type() )
-                || collection.type()
+                    collection.type )
+                || collection.type
                        == geode::ModelBoundary<
                            Model::dim >::component_type_static() )
             {
