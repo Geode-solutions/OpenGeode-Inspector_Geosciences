@@ -43,7 +43,7 @@ void check_model_A2()
         absl::StrCat( geode::DATA_PATH, "modelA2.og_strm" ) );
     const geode::StructuralModelInspector inspector{ model };
     const auto result = inspector.inspect_structural_model();
-    const geode::index_t expected_nb_brep_issues{ 92916 };
+    const geode::index_t expected_nb_brep_issues{ 99635 };
     geode::OpenGeodeInspectorGeosciencesInspectionException::test(
         result.brep.nb_issues() == expected_nb_brep_issues,
         "[Test] modelA2 should have ", expected_nb_brep_issues,

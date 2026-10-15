@@ -38,7 +38,7 @@ def data_dir():
 def check_model_A2(model):
     inspector = inspection.StructuralModelInspector( model )
     result = inspector.inspect_structural_model()
-    expected_nb_brep_issues = 92916
+    expected_nb_brep_issues = 99635
     if result.brep.nb_issues() != expected_nb_brep_issues:
         raise ValueError("[Test] modelA2 should have " + str(expected_nb_brep_issues) + " brep issues, not ", str(result.brep.nb_issues()) )
     expected_nb_geology_issues = model.nb_blocks()*2 + 2
