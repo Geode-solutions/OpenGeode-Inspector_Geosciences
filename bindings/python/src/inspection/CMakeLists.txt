@@ -21,6 +21,8 @@
 add_geode_python_binding(
     NAME "py_inspection"
     SOURCES
+        "cross_section_geology.hpp"
+        "cross_section_inspection.hpp"
         "geology_inspection.cpp"
         "structural_model_geology.hpp"
         "structural_model_inspection.hpp"

@@ -23,6 +23,10 @@
 
 #include <pybind11/pybind11.h>
 
+#include <geode/inspector/inspection/python/issues_repr.hpp>
+
+#include "cross_section_geology.hpp"
+#include "cross_section_inspection.hpp"
 #include "structural_model_geology.hpp"
 #include "structural_model_inspection.hpp"
 
@@ -37,4 +41,6 @@ PYBIND11_MODULE( opengeode_inspector_geosciences_py_inspection, module )
                 initialize );
     geode::define_structural_model_geology_inspector( module );
     geode::define_structural_model_inspector( module );
+    geode::define_cross_section_geology_inspector( module );
+    geode::define_cross_section_inspector( module );
 }

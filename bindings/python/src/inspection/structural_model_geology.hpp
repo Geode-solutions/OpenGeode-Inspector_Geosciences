@@ -23,23 +23,12 @@
 
 #include <geode/geosciences/explicit/representation/core/structural_model.hpp>
 
-#include <geode/model/mixin/core/component_type.hpp>
-
 #include <geode/inspector_geosciences/inspection/geology/structural_model_geology.hpp>
 
 namespace geode
 {
     void define_structural_model_geology_inspector( pybind11::module& module )
     {
-        pybind11::class_< InspectionIssues< ComponentID > >(
-            module, "InspectionIssuesComponentID" )
-            .def( "set_description",
-                &InspectionIssues< ComponentID >::set_description )
-            .def( "description", &InspectionIssues< ComponentID >::description )
-            .def( "nb_issues", &InspectionIssues< ComponentID >::nb_issues )
-            // .def( "issues", &InspectionIssues< ComponentID >::issues )
-            .def( "string", &InspectionIssues< ComponentID >::string );
-
         pybind11::class_< StructuralModelGeologyInspectionResult >(
             module, "StructuralModelGeologyInspectionResult" )
             .def( pybind11::init<>() )
@@ -54,12 +43,26 @@ namespace geode
             .def( "nb_issues",
                 &StructuralModelGeologyInspectionResult::nb_issues )
             .def( "string", &StructuralModelGeologyInspectionResult::string )
+            .def( "__str__", &StructuralModelGeologyInspectionResult::string )
+            .def( "__repr__",
+                &issues_repr< StructuralModelGeologyInspectionResult > )
             .def( "inspection_type",
                 &StructuralModelGeologyInspectionResult::inspection_type );
 
         pybind11::class_< StructuralModelGeologyInspector >(
             module, "StructuralModelGeologyInspector" )
             .def( pybind11::init< const StructuralModel& >() )
+            .def( "structural_model_geology_is_valid",
+                &StructuralModelGeologyInspector::
+                    structural_model_geology_is_valid )
+            .def( "geometrical_components_are_linked_to_geology",
+                &StructuralModelGeologyInspector::
+                    geometrical_components_are_linked_to_geology )
+            .def( "geological_components_are_linked_to_geometry",
+                &StructuralModelGeologyInspector::
+                    geological_components_are_linked_to_geometry )
+            .def( "horizons_are_valid",
+                &StructuralModelGeologyInspector::horizons_are_valid )
             .def( "inspect_structural_model_geology",
                 &StructuralModelGeologyInspector::
                     inspect_structural_model_geology );
