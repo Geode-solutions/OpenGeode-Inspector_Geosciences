@@ -54,8 +54,7 @@ int main( int argc, char* argv[] )
         absl::SetProgramUsageMessage( absl::StrCat(
             "ImplicitCrossSection inspector from Geode-solutions.\n",
             "Sample usage:\n", argv[0], " --input my_cross_section.og_ixsctn\n",
-            "Default behavior tests all available criteria, to disable one "
-            "use --noXXX, e.g. --nocomponent_linking" ) );
+            "All available criteria are tested." ) );
         absl::ParseCommandLine( argc, argv );
 
         geode::OpenGeodeGeosciencesIOModelLibrary::initialize();

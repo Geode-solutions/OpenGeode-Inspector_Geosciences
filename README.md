@@ -1,5 +1,5 @@
 <h1 align="center">OpenGeode-Inspector_Geosciences<sup><i>by Geode-solutions</i></sup></h1>
-<h3 align="center">OpenGeode module for inspecting meshes and models</h3>
+<h3 align="center">OpenGeode module for inspecting the geology of geological models</h3>
 
 <p align="center">
   <img src="https://github.com/Geode-solutions/OpenGeode-Inspector_Geosciences/actions/workflows/schedule.yml/badge.svg" alt="Build Status">
@@ -57,7 +57,7 @@ To use OpenGeode-Inspector_Geosciences, several options are available:
 
 - If you installed and compiled the C++ source code, you can use the executable binaries to apply an inspection of your meshes/models and toggle on/off the various checks directly.
 - or use the API functions (check the tests to see how it is done) if you want to go further or use the resulting errors to repair your meshes/models.
-- If you installed the python library, you can add `import opengeode_inspector` in your Python script to use the available API functions. Check [this documentation page](https://docs.geode-solutions.com/guides/use-opengeode-binding.html) for more details. Examples are also procured in the `examples` folder.
+- If you installed the python library, you can add `import opengeode_inspector_geosciences` in your Python script to use the available API functions. Check [this documentation page](https://docs.geode-solutions.com/guides/use-opengeode-binding.html) for more details. Examples are given in the Python tests (`bindings/python/tests`).
 
 ## Questions
 

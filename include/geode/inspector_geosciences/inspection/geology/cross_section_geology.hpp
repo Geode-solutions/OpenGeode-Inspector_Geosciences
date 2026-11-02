@@ -59,7 +59,7 @@ namespace geode
     };
 
     /*!
-     * Class for inspecting the geology of a CrossSection model corners
+     * Class for inspecting the geology of a CrossSection
      */
     class
         opengeode_inspector_geosciences_inspection_api CrossSectionGeologyInspector
