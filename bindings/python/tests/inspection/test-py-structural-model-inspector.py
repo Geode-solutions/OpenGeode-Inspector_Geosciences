@@ -185,6 +185,19 @@ def check_cross_section():
     if len(not_part) != 1 or not_part[0].id.string() != line.string():
         raise ValueError(f"[Test] Line should be reported as not part of geology, not:\n{geology_result}")
 
+    builder.add_line_in_horizon(cross_section.line(line), cross_section.horizon(horizon))
+    surface = builder.add_surface()
+    fault_block = builder.add_fault_block()
+    builder.add_surface_in_fault_block(
+        cross_section.surface(surface), cross_section.fault_block(fault_block)
+    )
+    builder.add_corner()
+    if not geology_inspector.geometrical_components_are_linked_to_geology():
+        raise ValueError("[Test] Corners are not required to be linked to geology")
+    linked_result = inspection.inspect_cross_section_geology(cross_section)
+    if linked_result.components_not_part_of_geology.nb_issues() != 0:
+        raise ValueError(f"[Test] No component should be reported as not part of geology, not:\n{linked_result}")
+
 
 if __name__ == "__main__":
     modelA2 = ogg.load_structural_model(data_dir() + "/modelA2.og_strm")
