@@ -141,6 +141,10 @@ void check_implicit_model()
         "[Test] mss_from_implicit_modeling_v1 should have ",
         expected_nb_v2_issues, " geological issues after fix, not ",
         v2_result.geology.nb_issues() );
+    geode::OpenGeodeInspectorGeosciencesInspectionException::test(
+        v1_inspector.structural_model_geology_is_valid(),
+        "[Test] mss_from_implicit_modeling_v1 geology should be valid after "
+        "fix" );
 }
 
 int main()

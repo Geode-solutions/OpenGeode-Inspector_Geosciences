@@ -49,7 +49,7 @@ namespace geode
     };
     /*!
      * Class for inspecting a StructuralModel
-     * @extends StructuralModelTopologyInspector
+     * @extends BRepInspector, StructuralModelGeologyInspector
      */
     class opengeode_inspector_geosciences_inspection_api
         StructuralModelInspector : public AddInspectors< StructuralModel,

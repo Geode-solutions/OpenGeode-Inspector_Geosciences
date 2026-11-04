@@ -113,7 +113,7 @@ namespace geode
                         absl::StrCat( "Block ",
                             internal::component_identification_to_string(
                                 block ),
-                            " is not part of any FaultBlock " ) );
+                            " is not part of any FaultBlock" ) );
                 }
             }
             internal::add_model_geological_components_not_linked_to_geometry(

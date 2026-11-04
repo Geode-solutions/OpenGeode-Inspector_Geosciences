@@ -70,15 +70,6 @@ namespace
         return true;
     }
 
-    template < typename Model >
-    [[nodiscard]] bool components_are_linked_to_geology_base(
-        const Model& model )
-    {
-        return components_are_linked_to_geology( model, model.corners() )
-               && components_are_linked_to_geology( model, model.lines() )
-               && components_are_linked_to_geology( model, model.surfaces() );
-    }
-
     template < typename Model, typename ComponentRange >
     void add_components_not_linked_to_geology( const Model& model,
         geode::InspectionIssues< geode::ComponentID >& issues,
@@ -107,7 +98,9 @@ namespace geode
             model_geometrical_components_are_linked_to_geology(
                 const CrossSection& model )
         {
-            return ::components_are_linked_to_geology_base( model );
+            return ::components_are_linked_to_geology( model, model.lines() )
+                   && ::components_are_linked_to_geology(
+                       model, model.surfaces() );
         }
 
         template <>
@@ -115,7 +108,7 @@ namespace geode
             model_geometrical_components_are_linked_to_geology(
                 const StructuralModel& model )
         {
-            return ::components_are_linked_to_geology_base( model )
+            return ::components_are_linked_to_geology( model, model.surfaces() )
                    && ::components_are_linked_to_geology(
                        model, model.blocks() );
         }
@@ -190,7 +183,7 @@ namespace geode
                     issues.add_issue( fault_block.component_id(),
                         absl::StrCat( "FaultBlock ",
                             component_identification_to_string( fault_block ),
-                            " is not linked to any geometrical collection" ) );
+                            " has no geometrical component" ) );
                 }
             }
             for( const auto& fault : model.faults() )
@@ -200,7 +193,7 @@ namespace geode
                     issues.add_issue( fault.component_id(),
                         absl::StrCat( "Fault ",
                             component_identification_to_string( fault ),
-                            " is not linked to any geometrical collection" ) );
+                            " has no geometrical component" ) );
                 }
             }
             for( const auto& horizon : model.horizons() )
@@ -210,7 +203,7 @@ namespace geode
                     issues.add_issue( horizon.component_id(),
                         absl::StrCat( "Horizon ",
                             component_identification_to_string( horizon ),
-                            " is not linked to any geometrical collection" ) );
+                            " has no geometrical component" ) );
                 }
             }
             for( const auto& stratigraphic_unit : model.stratigraphic_units() )
@@ -221,7 +214,7 @@ namespace geode
                         absl::StrCat( "StratigraphicUnit ",
                             component_identification_to_string(
                                 stratigraphic_unit ),
-                            " is not linked to any geometrical collection" ) );
+                            " has no geometrical component" ) );
                 }
             }
         }

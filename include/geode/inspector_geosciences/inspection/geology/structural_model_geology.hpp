@@ -59,7 +59,7 @@ namespace geode
     };
 
     /*!
-     * Class for inspecting the geology of a StructuralModel model corners
+     * Class for inspecting the geology of a StructuralModel
      */
     class
         opengeode_inspector_geosciences_inspection_api StructuralModelGeologyInspector

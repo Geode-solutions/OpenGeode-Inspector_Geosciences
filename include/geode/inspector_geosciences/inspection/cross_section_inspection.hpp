@@ -49,7 +49,7 @@ namespace geode
     };
     /*!
      * Class for inspecting a CrossSection
-     * @extends CrossSectionTopologyInspector
+     * @extends SectionInspector, CrossSectionGeologyInspector
      */
     class opengeode_inspector_geosciences_inspection_api CrossSectionInspector
         : public AddInspectors< CrossSection,
