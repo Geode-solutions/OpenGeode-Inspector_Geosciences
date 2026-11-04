@@ -23,7 +23,7 @@
 
 #include <pybind11/pybind11.h>
 
-#include <geode/inspector/inspection/python/issues_repr.hpp>
+#include "../issues_repr.hpp"
 
 #include "cross_section_geology.hpp"
 #include "cross_section_inspection.hpp"
