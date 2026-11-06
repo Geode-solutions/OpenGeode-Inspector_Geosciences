@@ -39,7 +39,9 @@
 
 void check_model_A2()
 {
-    const auto model = geode::load_structural_model(
+    const auto model = geode::load_one(
+        geode::load_structural_model(
+            absl::StrCat( geode::DATA_PATH, "modelA2.og_strm" ) ),
         absl::StrCat( geode::DATA_PATH, "modelA2.og_strm" ) );
     const geode::StructuralModelInspector inspector{ model };
     const auto result = inspector.inspect_structural_model();
@@ -63,8 +65,11 @@ void check_model_A2()
 
 void check_implicit_model()
 {
-    const auto model_v0 = geode::load_implicit_structural_model( absl::StrCat(
-        geode::DATA_PATH, "mss_from_implicit_modeling_v0.og_istrm" ) );
+    const auto model_v0 = geode::load_one(
+        geode::load_implicit_structural_model( absl::StrCat(
+            geode::DATA_PATH, "mss_from_implicit_modeling_v0.og_istrm" ) ),
+        absl::StrCat(
+            geode::DATA_PATH, "mss_from_implicit_modeling_v0.og_istrm" ) );
     const geode::StructuralModelInspector v0_inspector{ model_v0 };
     const auto v0_result = v0_inspector.inspect_structural_model();
     geode::OpenGeodeInspectorGeosciencesInspectionException::test(
@@ -88,8 +93,11 @@ void check_implicit_model()
         "part of any geological components, not:\n",
         v0_result.geology.string() );
 
-    auto model_v1 = geode::load_implicit_structural_model( absl::StrCat(
-        geode::DATA_PATH, "mss_from_implicit_modeling_v1.og_istrm" ) );
+    auto model_v1 = geode::load_one(
+        geode::load_implicit_structural_model( absl::StrCat(
+            geode::DATA_PATH, "mss_from_implicit_modeling_v1.og_istrm" ) ),
+        absl::StrCat(
+            geode::DATA_PATH, "mss_from_implicit_modeling_v1.og_istrm" ) );
     const geode::StructuralModelInspector v1_inspector{ model_v1 };
     const auto v1_result = v1_inspector.inspect_structural_model();
     geode::OpenGeodeInspectorGeosciencesInspectionException::test(
