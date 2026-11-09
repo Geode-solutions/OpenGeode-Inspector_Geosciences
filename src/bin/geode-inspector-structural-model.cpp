@@ -59,7 +59,10 @@ int main( int argc, char* argv[] )
         geode::OpenGeodeGeosciencesIOModelLibrary::initialize();
         const auto filename = absl::GetFlag( FLAGS_input );
 
-        inspect_model( geode::load_structural_model( filename ) );
+        for( const auto& model : geode::load_structural_model( filename ) )
+        {
+            inspect_model( model );
+        }
 
         return 0;
     }

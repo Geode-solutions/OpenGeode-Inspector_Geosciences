@@ -200,14 +200,19 @@ def check_cross_section():
 
 
 if __name__ == "__main__":
-    modelA2 = ogg.load_structural_model(data_dir() + "/modelA2.og_strm")
+    modelA2 = og.load_one(
+        ogg.load_structural_model(data_dir() + "/modelA2.og_strm"),
+        data_dir() + "/modelA2.og_strm",
+    )
     check_model_A2(modelA2)
-    model_v0 = ogg.load_implicit_structural_model(
-        data_dir() + "/mss_from_implicit_modeling_v0.og_istrm"
+    model_v0 = og.load_one(
+        ogg.load_implicit_structural_model(data_dir() + "/mss_from_implicit_modeling_v0.og_istrm"),
+        data_dir() + "/mss_from_implicit_modeling_v0.og_istrm",
     )
     check_implicit_model_v0(model_v0)
-    model_v1 = ogg.load_implicit_structural_model(
-        data_dir() + "/mss_from_implicit_modeling_v1.og_istrm"
+    model_v1 = og.load_one(
+        ogg.load_implicit_structural_model(data_dir() + "/mss_from_implicit_modeling_v1.og_istrm"),
+        data_dir() + "/mss_from_implicit_modeling_v1.og_istrm",
     )
     check_implicit_model_v1(model_v1)
     check_cross_section()

@@ -59,7 +59,10 @@ int main( int argc, char* argv[] )
         geode::OpenGeodeGeosciencesIOModelLibrary::initialize();
         const auto filename = absl::GetFlag( FLAGS_input );
 
-        inspect_cross_section( geode::load_cross_section( filename ) );
+        for( const auto& model : geode::load_cross_section( filename ) )
+        {
+            inspect_cross_section( model );
+        }
 
         return 0;
     }
