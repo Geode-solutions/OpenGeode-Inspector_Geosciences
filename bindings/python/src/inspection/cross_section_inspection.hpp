@@ -42,8 +42,10 @@ namespace geode
                 &CrossSectionInspectionResult::inspection_type );
 
         pybind11::class_< CrossSectionInspector, SectionInspector,
-            CrossSectionGeologyInspector >( module, "CrossSectionInspector" )
-            .def( pybind11::init< const CrossSection& >() )
+            CrossSectionGeologyInspector >(
+            module, "CrossSectionInspector", pybind11::dynamic_attr() )
+            .def( pybind11::init< const CrossSection& >(),
+                pybind11::keep_alive< 1, 2 >(), remember_model() )
             .def( "inspect_cross_section",
                 &CrossSectionInspector::inspect_cross_section );
 

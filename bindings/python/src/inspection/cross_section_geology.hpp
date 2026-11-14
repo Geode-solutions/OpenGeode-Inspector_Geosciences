@@ -50,7 +50,8 @@ namespace geode
 
         pybind11::class_< CrossSectionGeologyInspector >(
             module, "CrossSectionGeologyInspector" )
-            .def( pybind11::init< const CrossSection& >() )
+            .def( pybind11::init< const CrossSection& >(),
+                pybind11::keep_alive< 1, 2 >() )
             .def( "cross_section_geology_is_valid",
                 &CrossSectionGeologyInspector::cross_section_geology_is_valid )
             .def( "geometrical_components_are_linked_to_geology",

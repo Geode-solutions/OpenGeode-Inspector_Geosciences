@@ -51,7 +51,8 @@ namespace geode
 
         pybind11::class_< StructuralModelGeologyInspector >(
             module, "StructuralModelGeologyInspector" )
-            .def( pybind11::init< const StructuralModel& >() )
+            .def( pybind11::init< const StructuralModel& >(),
+                pybind11::keep_alive< 1, 2 >() )
             .def( "structural_model_geology_is_valid",
                 &StructuralModelGeologyInspector::
                     structural_model_geology_is_valid )

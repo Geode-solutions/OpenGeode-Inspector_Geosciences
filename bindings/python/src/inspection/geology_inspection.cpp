@@ -23,6 +23,8 @@
 
 #include <pybind11/pybind11.h>
 
+#include <geode/bindings/python/model/model_vertex_check.hpp>
+
 #include "../issues_repr.hpp"
 
 #include "cross_section_geology.hpp"

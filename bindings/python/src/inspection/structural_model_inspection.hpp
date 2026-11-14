@@ -44,8 +44,9 @@ namespace geode
 
         pybind11::class_< StructuralModelInspector, BRepInspector,
             StructuralModelGeologyInspector >(
-            module, "StructuralModelInspector" )
-            .def( pybind11::init< const StructuralModel& >() )
+            module, "StructuralModelInspector", pybind11::dynamic_attr() )
+            .def( pybind11::init< const StructuralModel& >(),
+                pybind11::keep_alive< 1, 2 >(), remember_model() )
             .def( "inspect_structural_model",
                 &StructuralModelInspector::inspect_structural_model );
 
