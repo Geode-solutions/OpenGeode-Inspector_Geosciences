@@ -25,7 +25,7 @@
 
 #include <geode/inspector_geosciences/inspection/geology/cross_section_geology.hpp>
 
-#include "../inspection_helpers.hpp"
+#include <geode/inspector/bindings/python/inspection_helpers.hpp>
 
 namespace geode
 {
