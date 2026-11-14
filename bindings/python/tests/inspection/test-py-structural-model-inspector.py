@@ -141,7 +141,7 @@ def check_implicit_model_v1(model_v1):
         if not inspector.horizons_are_valid():
             raise ValueError("[Test] Fixed model horizons should be valid")
 
-    empty_fault = builder.add_fault(ogg.Fault3D.FAULT_TYPE.NORMAL)
+    empty_fault = builder.add_fault(ogg.Fault3D.FaultType.normal)
     if v1_inspector.structural_model_geology_is_valid():
         raise ValueError("[Test] Model with an empty fault should not be valid")
     if v1_inspector.geological_components_are_linked_to_geometry():
