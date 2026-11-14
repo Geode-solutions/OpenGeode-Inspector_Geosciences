@@ -37,7 +37,7 @@ namespace geode
             .def( "nb_issues", &CrossSectionInspectionResult::nb_issues )
             .def( "string", &CrossSectionInspectionResult::string )
             .def( "__str__", &CrossSectionInspectionResult::string )
-            .def( "__repr__", &issues_repr< CrossSectionInspectionResult > )
+            .def( "__repr__", &result_repr )
             .def( "inspection_type",
                 &CrossSectionInspectionResult::inspection_type );
 

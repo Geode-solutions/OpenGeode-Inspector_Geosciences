@@ -38,7 +38,7 @@ PYBIND11_MODULE( opengeode_inspector_geosciences_py_inspection, module )
     pybind11::module::import( "opengeode_inspector" );
     pybind11::class_< geode::OpenGeodeInspectorGeosciencesInspectionLibrary >(
         module, "OpenGeodeInspectorGeosciencesInspectionLibrary" )
-        .def( "initialize",
+        .def_static( "initialize",
             &geode::OpenGeodeInspectorGeosciencesInspectionLibrary::
                 initialize );
     geode::define_structural_model_geology_inspector( module );

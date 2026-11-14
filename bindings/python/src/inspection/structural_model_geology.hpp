@@ -44,8 +44,7 @@ namespace geode
                 &StructuralModelGeologyInspectionResult::nb_issues )
             .def( "string", &StructuralModelGeologyInspectionResult::string )
             .def( "__str__", &StructuralModelGeologyInspectionResult::string )
-            .def( "__repr__",
-                &issues_repr< StructuralModelGeologyInspectionResult > )
+            .def( "__repr__", &result_repr )
             .def( "inspection_type",
                 &StructuralModelGeologyInspectionResult::inspection_type );
 

@@ -38,7 +38,7 @@ namespace geode
             .def( "nb_issues", &StructuralModelInspectionResult::nb_issues )
             .def( "string", &StructuralModelInspectionResult::string )
             .def( "__str__", &StructuralModelInspectionResult::string )
-            .def( "__repr__", &issues_repr< StructuralModelInspectionResult > )
+            .def( "__repr__", &result_repr )
             .def( "inspection_type",
                 &StructuralModelInspectionResult::inspection_type );
 

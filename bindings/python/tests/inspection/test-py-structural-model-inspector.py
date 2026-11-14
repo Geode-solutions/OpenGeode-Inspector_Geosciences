@@ -47,11 +47,16 @@ def check_model_A2(model):
         )
     if str(result) != result.string():
         raise ValueError("[Test] str(result) should be the inspection report")
-    expected_repr = f"<StructuralModelInspectionResult: {result.nb_issues()} issues>"
+    expected_repr = (
+        f"StructuralModelInspectionResult(nb_issues={result.nb_issues()}, "
+        f"brep={result.brep.nb_issues()}, geology={result.geology.nb_issues()})"
+    )
     if repr(result) != expected_repr:
         raise ValueError(f"[Test] repr(result) should be {expected_repr}, not {repr(result)}")
     expected_geology_repr = (
-        f"<StructuralModelGeologyInspectionResult: {expected_nb_geology_issues} issues>"
+        f"StructuralModelGeologyInspectionResult(nb_issues={expected_nb_geology_issues}, "
+        f"components_not_part_of_geology={result.geology.components_not_part_of_geology.nb_issues()}, "
+        f"invalid_horizons={result.geology.invalid_horizons.nb_issues()})"
     )
     if repr(result.geology) != expected_geology_repr:
         raise ValueError(
@@ -161,7 +166,7 @@ def check_cross_section():
         raise ValueError(f"[Test] Empty CrossSection should have no issues, not:\n{result}")
     if result.section.nb_issues() != 0 or result.geology.nb_issues() != 0:
         raise ValueError(f"[Test] Empty CrossSection should have no section or geology issues, not:\n{result}")
-    if repr(result) != "<CrossSectionInspectionResult: 0 issues>":
+    if repr(result) != "CrossSectionInspectionResult(nb_issues=0)":
         raise ValueError(f"[Test] Wrong CrossSectionInspectionResult repr: {repr(result)}")
     inspector = inspection.CrossSectionInspector(cross_section)
     if not inspector.cross_section_geology_is_valid():

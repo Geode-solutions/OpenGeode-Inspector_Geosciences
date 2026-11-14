@@ -24,10 +24,17 @@
 #pragma once
 
 #include <string>
+#include <vector>
 
 #include <absl/strings/str_cat.h>
+#include <absl/strings/str_join.h>
 
 #include <pybind11/pybind11.h>
+
+#include <geode/basic/types.hpp>
+
+#include <geode/bindings/python/common.hpp>
+#include <geode/bindings/python/model/model_vertex_check.hpp>
 
 namespace geode
 {
@@ -36,15 +43,39 @@ namespace geode
      */
     using ReleaseGil = pybind11::call_guard< pybind11::gil_scoped_release >;
 
-    // Short representation for objects whose string() is a full report,
-    // e.g. <BRepInspectionResult: 8 issues>
-    template < typename Result >
-    std::string issues_repr( const pybind11::object& self )
+    // Call form of the inspection results: the total number of issues, and
+    // the number of issues of each member having some, e.g.
+    // StructuralModelInspectionResult(nb_issues=8, brep=5, geology=3)
+    // Same representation as the results of OpenGeode-Inspector.
+    inline std::string result_repr( const pybind11::object& self )
     {
-        const auto& result = self.cast< const Result& >();
-        return absl::StrCat( "<",
-            pybind11::str( self.get_type().attr( "__name__" ) )
-                .cast< std::string >(),
-            ": ", result.nb_issues(), " issues>" );
+        const auto property_type =
+            pybind11::module_::import( "builtins" ).attr( "property" );
+        std::vector< std::string > arguments{ absl::StrCat(
+            "nb_issues=", self.attr( "nb_issues" )().cast< index_t >() ) };
+        for( const auto item :
+            pybind11::type::of( self ).attr( "__dict__" ).attr( "items" )() )
+        {
+            const auto member = item.cast< pybind11::tuple >();
+            if( !pybind11::isinstance( member[1], property_type ) )
+            {
+                continue;
+            }
+            const auto value = self.attr( member[0] );
+            if( !pybind11::hasattr( value, "nb_issues" ) )
+            {
+                continue;
+            }
+            const auto nb_issues =
+                value.attr( "nb_issues" )().cast< index_t >();
+            if( nb_issues != 0 )
+            {
+                arguments.push_back( absl::StrCat(
+                    member[0].cast< std::string >(), "=", nb_issues ) );
+            }
+        }
+        return absl::StrCat(
+            pybind11::type::of( self ).attr( "__name__" ).cast< std::string >(),
+            "(", absl::StrJoin( arguments, ", " ), ")" );
     }
 } // namespace geode
