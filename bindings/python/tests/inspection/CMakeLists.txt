@@ -26,6 +26,7 @@ add_geode_python_test(
 
 foreach(test_name
     "test-py-geology-lifetime"
+    "test-py-geology-gil"
 )
     add_geode_python_test(
         SOURCE "${test_name}.py"

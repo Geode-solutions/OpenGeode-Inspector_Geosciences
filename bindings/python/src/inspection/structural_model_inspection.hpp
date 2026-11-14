@@ -31,7 +31,7 @@ namespace geode
     {
         pybind11::class_< StructuralModelInspectionResult >(
             module, "StructuralModelInspectionResult" )
-            .def( pybind11::init<>() )
+            .def( pybind11::init<>(), ReleaseGil() )
             .def_readwrite( "brep", &StructuralModelInspectionResult::brep )
             .def_readwrite(
                 "geology", &StructuralModelInspectionResult::geology )
@@ -46,14 +46,17 @@ namespace geode
             StructuralModelGeologyInspector >(
             module, "StructuralModelInspector", pybind11::dynamic_attr() )
             .def( pybind11::init< const StructuralModel& >(),
-                pybind11::keep_alive< 1, 2 >(), remember_model() )
+                pybind11::keep_alive< 1, 2 >(), remember_model(), ReleaseGil() )
             .def( "inspect_structural_model",
-                &StructuralModelInspector::inspect_structural_model );
+                &StructuralModelInspector::inspect_structural_model,
+                ReleaseGil() );
 
         module.def(
-            "inspect_structural_model", []( const StructuralModel& model ) {
+            "inspect_structural_model",
+            []( const StructuralModel& model ) {
                 StructuralModelInspector inspector{ model };
                 return inspector.inspect_structural_model();
-            } );
+            },
+            ReleaseGil() );
     }
 } // namespace geode

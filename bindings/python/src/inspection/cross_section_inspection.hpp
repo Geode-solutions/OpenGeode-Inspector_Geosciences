@@ -31,7 +31,7 @@ namespace geode
     {
         pybind11::class_< CrossSectionInspectionResult >(
             module, "CrossSectionInspectionResult" )
-            .def( pybind11::init<>() )
+            .def( pybind11::init<>(), ReleaseGil() )
             .def_readwrite( "section", &CrossSectionInspectionResult::section )
             .def_readwrite( "geology", &CrossSectionInspectionResult::geology )
             .def( "nb_issues", &CrossSectionInspectionResult::nb_issues )
@@ -45,13 +45,16 @@ namespace geode
             CrossSectionGeologyInspector >(
             module, "CrossSectionInspector", pybind11::dynamic_attr() )
             .def( pybind11::init< const CrossSection& >(),
-                pybind11::keep_alive< 1, 2 >(), remember_model() )
+                pybind11::keep_alive< 1, 2 >(), remember_model(), ReleaseGil() )
             .def( "inspect_cross_section",
-                &CrossSectionInspector::inspect_cross_section );
+                &CrossSectionInspector::inspect_cross_section, ReleaseGil() );
 
-        module.def( "inspect_cross_section", []( const CrossSection& model ) {
-            CrossSectionInspector inspector{ model };
-            return inspector.inspect_cross_section();
-        } );
+        module.def(
+            "inspect_cross_section",
+            []( const CrossSection& model ) {
+                CrossSectionInspector inspector{ model };
+                return inspector.inspect_cross_section();
+            },
+            ReleaseGil() );
     }
 } // namespace geode

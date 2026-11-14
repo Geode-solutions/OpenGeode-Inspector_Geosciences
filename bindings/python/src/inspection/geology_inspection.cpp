@@ -25,7 +25,7 @@
 
 #include <geode/bindings/python/model/model_vertex_check.hpp>
 
-#include "../issues_repr.hpp"
+#include "../inspection_helpers.hpp"
 
 #include "cross_section_geology.hpp"
 #include "cross_section_inspection.hpp"

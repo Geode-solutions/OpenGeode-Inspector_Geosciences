@@ -31,7 +31,7 @@ namespace geode
     {
         pybind11::class_< CrossSectionGeologyInspectionResult >(
             module, "CrossSectionGeologyInspectionResult" )
-            .def( pybind11::init<>() )
+            .def( pybind11::init<>(), ReleaseGil() )
             .def_readwrite( "components_not_part_of_geology",
                 &CrossSectionGeologyInspectionResult::
                     components_not_part_of_geology )
@@ -51,24 +51,31 @@ namespace geode
         pybind11::class_< CrossSectionGeologyInspector >(
             module, "CrossSectionGeologyInspector" )
             .def( pybind11::init< const CrossSection& >(),
-                pybind11::keep_alive< 1, 2 >() )
+                pybind11::keep_alive< 1, 2 >(), ReleaseGil() )
             .def( "cross_section_geology_is_valid",
-                &CrossSectionGeologyInspector::cross_section_geology_is_valid )
+                &CrossSectionGeologyInspector::cross_section_geology_is_valid,
+                ReleaseGil() )
             .def( "geometrical_components_are_linked_to_geology",
                 &CrossSectionGeologyInspector::
-                    geometrical_components_are_linked_to_geology )
+                    geometrical_components_are_linked_to_geology,
+                ReleaseGil() )
             .def( "geological_components_are_linked_to_geometry",
                 &CrossSectionGeologyInspector::
-                    geological_components_are_linked_to_geometry )
+                    geological_components_are_linked_to_geometry,
+                ReleaseGil() )
             .def( "horizons_are_valid",
-                &CrossSectionGeologyInspector::horizons_are_valid )
+                &CrossSectionGeologyInspector::horizons_are_valid,
+                ReleaseGil() )
             .def( "inspect_cross_section_geology",
-                &CrossSectionGeologyInspector::inspect_cross_section_geology );
+                &CrossSectionGeologyInspector::inspect_cross_section_geology,
+                ReleaseGil() );
 
         module.def(
-            "inspect_cross_section_geology", []( const CrossSection& model ) {
+            "inspect_cross_section_geology",
+            []( const CrossSection& model ) {
                 CrossSectionGeologyInspector inspector{ model };
                 return inspector.inspect_cross_section_geology();
-            } );
+            },
+            ReleaseGil() );
     }
 } // namespace geode

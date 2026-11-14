@@ -31,6 +31,11 @@
 
 namespace geode
 {
+    /*!
+     * The inspections only read the model: the GIL is released while they run.
+     */
+    using ReleaseGil = pybind11::call_guard< pybind11::gil_scoped_release >;
+
     // Short representation for objects whose string() is a full report,
     // e.g. <BRepInspectionResult: 8 issues>
     template < typename Result >

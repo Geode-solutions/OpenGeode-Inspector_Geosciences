@@ -31,7 +31,7 @@ namespace geode
     {
         pybind11::class_< StructuralModelGeologyInspectionResult >(
             module, "StructuralModelGeologyInspectionResult" )
-            .def( pybind11::init<>() )
+            .def( pybind11::init<>(), ReleaseGil() )
             .def_readwrite( "components_not_part_of_geology",
                 &StructuralModelGeologyInspectionResult::
                     components_not_part_of_geology )
@@ -52,26 +52,33 @@ namespace geode
         pybind11::class_< StructuralModelGeologyInspector >(
             module, "StructuralModelGeologyInspector" )
             .def( pybind11::init< const StructuralModel& >(),
-                pybind11::keep_alive< 1, 2 >() )
+                pybind11::keep_alive< 1, 2 >(), ReleaseGil() )
             .def( "structural_model_geology_is_valid",
                 &StructuralModelGeologyInspector::
-                    structural_model_geology_is_valid )
+                    structural_model_geology_is_valid,
+                ReleaseGil() )
             .def( "geometrical_components_are_linked_to_geology",
                 &StructuralModelGeologyInspector::
-                    geometrical_components_are_linked_to_geology )
+                    geometrical_components_are_linked_to_geology,
+                ReleaseGil() )
             .def( "geological_components_are_linked_to_geometry",
                 &StructuralModelGeologyInspector::
-                    geological_components_are_linked_to_geometry )
+                    geological_components_are_linked_to_geometry,
+                ReleaseGil() )
             .def( "horizons_are_valid",
-                &StructuralModelGeologyInspector::horizons_are_valid )
+                &StructuralModelGeologyInspector::horizons_are_valid,
+                ReleaseGil() )
             .def( "inspect_structural_model_geology",
                 &StructuralModelGeologyInspector::
-                    inspect_structural_model_geology );
+                    inspect_structural_model_geology,
+                ReleaseGil() );
 
-        module.def( "inspect_structural_model_geology",
+        module.def(
+            "inspect_structural_model_geology",
             []( const StructuralModel& model ) {
                 StructuralModelGeologyInspector inspector{ model };
                 return inspector.inspect_structural_model_geology();
-            } );
+            },
+            ReleaseGil() );
     }
 } // namespace geode
