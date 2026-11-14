@@ -19,3 +19,12 @@
 # SOFTWARE.
 
 add_subdirectory(inspection)
+
+add_geode_python_test(
+    SOURCE "test-py-package-docs.py"
+    ARGUMENTS
+        "${PROJECT_SOURCE_DIR}/bindings/python/opengeode_inspector_geosciences_doc.txt"
+        "${PROJECT_BINARY_DIR}/wheel/opengeode_inspector_geosciences"
+    DEPENDENCIES
+        ${PROJECT_NAME}::py_inspection
+)

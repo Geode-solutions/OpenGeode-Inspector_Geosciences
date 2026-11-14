@@ -23,7 +23,7 @@
 
 #include <pybind11/pybind11.h>
 
-#include <geode/bindings/python/model/model_vertex_check.hpp>
+#include <geode/bindings/python/common.hpp>
 
 #include "../inspection_helpers.hpp"
 
@@ -34,15 +34,30 @@
 
 PYBIND11_MODULE( opengeode_inspector_geosciences_py_inspection, module )
 {
-    module.doc() = "OpenGeode-Inspector_Geosciences Python binding for model";
-    pybind11::module::import( "opengeode_inspector" );
+    module.doc() =
+        "Inspection of the geology of the structural models and cross "
+        "sections of OpenGeode-Geosciences: the geology inspectors "
+        "(StructuralModelGeologyInspector, CrossSectionGeologyInspector) "
+        "check the links between the geometrical and the geological "
+        "components and the horizons, and the model inspectors "
+        "(StructuralModelInspector, CrossSectionInspector) add the "
+        "inspection of the BRep or of the Section; inspect_structural_model, "
+        "inspect_cross_section... do it in one call. Call "
+        "OpenGeodeInspectorGeosciencesInspectionLibrary.initialize() before "
+        "using the module.";
+    geode::import_binding_dependency( module, "opengeode" );
+    geode::import_binding_dependency( module, "opengeode_geosciences" );
+    geode::import_binding_dependency( module, "opengeode_inspector" );
     pybind11::class_< geode::OpenGeodeInspectorGeosciencesInspectionLibrary >(
-        module, "OpenGeodeInspectorGeosciencesInspectionLibrary" )
+        module, "OpenGeodeInspectorGeosciencesInspectionLibrary",
+        "Initialization of the geosciences inspection module" )
         .def_static( "initialize",
-            &geode::OpenGeodeInspectorGeosciencesInspectionLibrary::
-                initialize );
+            &geode::OpenGeodeInspectorGeosciencesInspectionLibrary::initialize,
+            "Initialize the geosciences inspection library, and the "
+            "libraries it depends on. Calling it again has no effect" );
     geode::define_structural_model_geology_inspector( module );
     geode::define_structural_model_inspector( module );
     geode::define_cross_section_geology_inspector( module );
     geode::define_cross_section_inspector( module );
+    geode::document_missing_constructors( module );
 }

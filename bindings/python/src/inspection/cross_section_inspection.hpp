@@ -25,36 +25,47 @@
 
 #include <geode/inspector_geosciences/inspection/cross_section_inspection.hpp>
 
+#include "../inspection_helpers.hpp"
+
 namespace geode
 {
     void define_cross_section_inspector( pybind11::module& module )
     {
-        pybind11::class_< CrossSectionInspectionResult >(
-            module, "CrossSectionInspectionResult" )
-            .def( pybind11::init<>(), ReleaseGil() )
-            .def_readwrite( "section", &CrossSectionInspectionResult::section )
-            .def_readwrite( "geology", &CrossSectionInspectionResult::geology )
-            .def( "nb_issues", &CrossSectionInspectionResult::nb_issues )
-            .def( "string", &CrossSectionInspectionResult::string )
-            .def( "__str__", &CrossSectionInspectionResult::string )
-            .def( "__repr__", &result_repr )
-            .def( "inspection_type",
-                &CrossSectionInspectionResult::inspection_type );
+        auto result = define_inspection_result< CrossSectionInspectionResult >(
+            module, "CrossSectionInspectionResult",
+            "Result of the inspection of a CrossSection: the inspection "
+            "of its Section and of its geology" );
+        INSPECTION_RESULT_MEMBER( result, CrossSectionInspectionResult, section,
+            "SectionInspectionResult: the inspection of the meshes and of "
+            "the topology of the model" );
+        INSPECTION_RESULT_MEMBER( result, CrossSectionInspectionResult, geology,
+            "CrossSectionGeologyInspectionResult: the inspection of the "
+            "geology of the model" );
 
         pybind11::class_< CrossSectionInspector, SectionInspector,
-            CrossSectionGeologyInspector >(
-            module, "CrossSectionInspector", pybind11::dynamic_attr() )
+            CrossSectionGeologyInspector >( module, "CrossSectionInspector",
+            pybind11::dynamic_attr(),
+            "Complete inspection of a CrossSection: the inspection of its "
+            "Section (SectionInspector) and of its geology "
+            "(CrossSectionGeologyInspector), whose methods it also has" )
             .def( pybind11::init< const CrossSection& >(),
-                pybind11::keep_alive< 1, 2 >(), remember_model(), ReleaseGil() )
+                pybind11::arg( "cross_section" ),
+                pybind11::keep_alive< 1, 2 >(), remember_model(), ReleaseGil(),
+                "Create the inspector of this CrossSection. The inspector "
+                "keeps the CrossSection alive" )
             .def( "inspect_cross_section",
-                &CrossSectionInspector::inspect_cross_section, ReleaseGil() );
+                &CrossSectionInspector::inspect_cross_section, ReleaseGil(),
+                "Return the CrossSectionInspectionResult: the inspection of "
+                "the Section and of the geology of the model" );
 
         module.def(
             "inspect_cross_section",
-            []( const CrossSection& model ) {
-                CrossSectionInspector inspector{ model };
+            []( const CrossSection& cross_section ) {
+                const CrossSectionInspector inspector{ cross_section };
                 return inspector.inspect_cross_section();
             },
-            ReleaseGil() );
+            pybind11::arg( "cross_section" ), ReleaseGil(),
+            "Inspect the CrossSection with a CrossSectionInspector and "
+            "return the CrossSectionInspectionResult" );
     }
 } // namespace geode

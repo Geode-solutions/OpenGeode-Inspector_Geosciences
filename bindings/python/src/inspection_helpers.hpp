@@ -78,4 +78,32 @@ namespace geode
             pybind11::type::of( self ).attr( "__name__" ).cast< std::string >(),
             "(", absl::StrJoin( arguments, ", " ), ")" );
     }
+
+    /*!
+     * Define the members shared by every inspection result: the constructor
+     * building a result without issue, nb_issues() and inspection_type().
+     * The members of the result are then defined with
+     * INSPECTION_RESULT_MEMBER.
+     */
+    template < typename Result >
+    pybind11::class_< Result > define_inspection_result(
+        pybind11::module& module, const char* name, const char* doc )
+    {
+        auto python_class = define_string_representation(
+            pybind11::class_< Result >( module, name, doc ), &result_repr );
+        python_class
+            .def( pybind11::init<>(),
+                "Create a result without any issue (every inspection is "
+                "described as not tested)" )
+            .def( "nb_issues", &Result::nb_issues,
+                "Return the total number of issues of the result: the "
+                "sum of the issues of its members" )
+            .def( "inspection_type", &Result::inspection_type,
+                "Return the title of the kind of inspection of this "
+                "result" );
+        return python_class;
+    }
 } // namespace geode
+
+#define INSPECTION_RESULT_MEMBER( python_class, Result, member, doc )          \
+    geode::def_readwrite_named( python_class, #member, &Result::member, doc )

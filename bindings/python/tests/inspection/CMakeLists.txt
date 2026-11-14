@@ -25,6 +25,7 @@ add_geode_python_test(
 )
 
 foreach(test_name
+    "test-py-geology-bindings"
     "test-py-geology-lifetime"
     "test-py-geology-gil"
     "test-py-geology-results"
