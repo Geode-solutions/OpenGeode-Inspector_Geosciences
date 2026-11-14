@@ -1,0 +1,96 @@
+OpenGeode-Inspector_Geosciences: inspection of the geology of the models of OpenGeode-Geosciences.
+
+The package checks that the geological components of a StructuralModel or of a
+CrossSection (faults, horizons, fault blocks, stratigraphic units) are
+consistent with their geometrical components, and that their horizons are
+valid, and lists the issues found. It completes opengeode_inspector, which
+inspects the BRep or the Section of the model. The packages opengeode,
+opengeode_geosciences and opengeode_inspector must be imported first:
+
+    >>> import opengeode
+    >>> import opengeode_geosciences as geosciences
+    >>> import opengeode_inspector
+    >>> import opengeode_inspector_geosciences as inspector
+    >>> model = geosciences.StructuralModel()
+    >>> builder = geosciences.StructuralModelBuilder(model)
+    >>> fault = builder.add_fault(geosciences.Fault3D.FaultType.normal)
+    >>> block = builder.add_block()
+
+Modules
+=======
+
+- geosciences_inspection: the inspectors, which return the issues found.
+
+Inspecting the geology
+======================
+
+StructuralModelGeologyInspector and CrossSectionGeologyInspector check the
+geology only. The methods telling if the geology is valid are cheaper than the
+inspections listing the issues:
+
+    >>> geology = inspector.StructuralModelGeologyInspector(model)
+    >>> geology.geometrical_components_are_linked_to_geology()
+    False
+    >>> geology.geological_components_are_linked_to_geometry()
+    False
+    >>> geology.horizons_are_valid()
+    True
+    >>> geology.structural_model_geology_is_valid()
+    False
+
+The Block is not part of any FaultBlock and of any geological collection, and
+the Fault has no geometrical component. The inspection lists these issues; its
+repr summarizes the number of issues of each criterion, str() (and string()) is
+the full report with the message of every issue:
+
+    >>> result = geology.inspect_structural_model_geology()
+    >>> result.nb_issues()
+    3
+    >>> result
+    StructuralModelGeologyInspectionResult(nb_issues=3, components_not_part_of_geology=2, empty_geological_components=1)
+    >>> result.empty_geological_components.issues()[0].id.string() == fault.string()
+    True
+    >>> "is not part of any FaultBlock" in str(result)
+    True
+
+Once the Block is in a FaultBlock, only the empty Fault remains (the function
+inspect_structural_model_geology creates the inspector and runs it in one
+call):
+
+    >>> fault_block = builder.add_fault_block()
+    >>> builder.add_block_in_fault_block(
+    ...     model.block(block), model.fault_block(fault_block)
+    ... )
+    0
+    >>> inspector.inspect_structural_model_geology(model).nb_issues()
+    1
+
+Inspecting a whole model
+========================
+
+StructuralModelInspector (and CrossSectionInspector) inspects both the BRep of
+the model (it is a BRepInspector, whose methods it has) and its geology. The
+result gives the two inspections:
+
+    >>> result = inspector.inspect_structural_model(model)
+    >>> result.brep.nb_issues()
+    0
+    >>> result.geology.nb_issues()
+    1
+    >>> result
+    StructuralModelInspectionResult(nb_issues=1, geology=1)
+
+The inspectors keep the model alive as long as they exist, and the inspections
+release the GIL, so that other Python threads run during the inspection of a
+large model.
+
+Cross sections
+==============
+
+CrossSectionInspector, CrossSectionGeologyInspector and inspect_cross_section
+do the same for the CrossSection, whose results are CrossSectionInspectionResult
+(section, geology) and CrossSectionGeologyInspectionResult:
+
+    >>> cross_section = geosciences.CrossSection()
+    >>> inspector.inspect_cross_section(cross_section)
+    CrossSectionInspectionResult(nb_issues=0)

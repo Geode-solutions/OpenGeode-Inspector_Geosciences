@@ -23,3 +23,16 @@ add_geode_python_test(
     DEPENDENCIES
         ${PROJECT_NAME}::py_inspection
 )
+
+foreach(test_name
+    "test-py-geology-bindings"
+    "test-py-geology-lifetime"
+    "test-py-geology-gil"
+    "test-py-geology-results"
+)
+    add_geode_python_test(
+        SOURCE "${test_name}.py"
+        DEPENDENCIES
+            ${PROJECT_NAME}::py_inspection
+    )
+endforeach()
