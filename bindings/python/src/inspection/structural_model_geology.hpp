@@ -25,52 +25,87 @@
 
 #include <geode/inspector_geosciences/inspection/geology/structural_model_geology.hpp>
 
+#include <geode/inspector/bindings/python/inspection_helpers.hpp>
+
 namespace geode
 {
     void define_structural_model_geology_inspector( pybind11::module& module )
     {
-        pybind11::class_< StructuralModelGeologyInspectionResult >(
-            module, "StructuralModelGeologyInspectionResult" )
-            .def( pybind11::init<>() )
-            .def_readwrite( "components_not_part_of_geology",
-                &StructuralModelGeologyInspectionResult::
-                    components_not_part_of_geology )
-            .def_readwrite( "empty_geological_components",
-                &StructuralModelGeologyInspectionResult::
-                    empty_geological_components )
-            .def_readwrite( "invalid_horizons",
-                &StructuralModelGeologyInspectionResult::invalid_horizons )
-            .def( "nb_issues",
-                &StructuralModelGeologyInspectionResult::nb_issues )
-            .def( "string", &StructuralModelGeologyInspectionResult::string )
-            .def( "__str__", &StructuralModelGeologyInspectionResult::string )
-            .def( "__repr__",
-                &issues_repr< StructuralModelGeologyInspectionResult > )
-            .def( "inspection_type",
-                &StructuralModelGeologyInspectionResult::inspection_type );
+        auto result =
+            define_inspection_result< StructuralModelGeologyInspectionResult >(
+                module, "StructuralModelGeologyInspectionResult",
+                "Result of the inspection of the geology of a StructuralModel: "
+                "the components not linked to the geology, the empty "
+                "geological components and the invalid horizons" );
+        INSPECTION_RESULT_MEMBER( result,
+            StructuralModelGeologyInspectionResult,
+            components_not_part_of_geology,
+            "InspectionIssues of the ComponentID of the surfaces and blocks "
+            "not linked to any geological collection, and of the blocks not "
+            "in any FaultBlock" );
+        INSPECTION_RESULT_MEMBER( result,
+            StructuralModelGeologyInspectionResult, empty_geological_components,
+            "InspectionIssues of the ComponentID of the geological "
+            "components (faults, horizons...) without any geometrical "
+            "component" );
+        INSPECTION_RESULT_MEMBER( result,
+            StructuralModelGeologyInspectionResult, invalid_horizons,
+            "InspectionIssues of the uuid of the horizons containing a "
+            "closed surface or a surface with a free border" );
 
-        pybind11::class_< StructuralModelGeologyInspector >(
-            module, "StructuralModelGeologyInspector" )
-            .def( pybind11::init< const StructuralModel& >() )
+        pybind11::class_< StructuralModelGeologyInspector >( module,
+            "StructuralModelGeologyInspector",
+            "Inspection of the geology of a StructuralModel: the links "
+            "between its geometrical components and its geological "
+            "components (faults, horizons, fault blocks, stratigraphic "
+            "units), and the validity of its horizons" )
+            .def( pybind11::init< const StructuralModel& >(),
+                pybind11::arg( "model" ), pybind11::keep_alive< 1, 2 >(),
+                ReleaseGil(),
+                "Create the inspector of the geology of this StructuralModel. "
+                "The inspector keeps the model alive" )
             .def( "structural_model_geology_is_valid",
                 &StructuralModelGeologyInspector::
-                    structural_model_geology_is_valid )
+                    structural_model_geology_is_valid,
+                ReleaseGil(),
+                "Return True if the geometrical components are linked to the "
+                "geology, the geological components are linked to the "
+                "geometry and the horizons are valid" )
             .def( "geometrical_components_are_linked_to_geology",
                 &StructuralModelGeologyInspector::
-                    geometrical_components_are_linked_to_geology )
+                    geometrical_components_are_linked_to_geology,
+                ReleaseGil(),
+                "Return True if every block is in a FaultBlock and every "
+                "surface and block is in a geological collection or a "
+                "ModelBoundary" )
             .def( "geological_components_are_linked_to_geometry",
                 &StructuralModelGeologyInspector::
-                    geological_components_are_linked_to_geometry )
+                    geological_components_are_linked_to_geometry,
+                ReleaseGil(),
+                "Return True if every geological component (fault, horizon, "
+                "fault block...) contains at least one geometrical "
+                "component" )
             .def( "horizons_are_valid",
-                &StructuralModelGeologyInspector::horizons_are_valid )
+                &StructuralModelGeologyInspector::horizons_are_valid,
+                ReleaseGil(),
+                "Return True if no horizon contains a closed surface or a "
+                "surface with a free border" )
             .def( "inspect_structural_model_geology",
                 &StructuralModelGeologyInspector::
-                    inspect_structural_model_geology );
+                    inspect_structural_model_geology,
+                ReleaseGil(),
+                "Return the StructuralModelGeologyInspectionResult: every "
+                "issue of the geology of the model" );
 
-        module.def( "inspect_structural_model_geology",
+        module.def(
+            "inspect_structural_model_geology",
             []( const StructuralModel& model ) {
-                StructuralModelGeologyInspector inspector{ model };
+                const StructuralModelGeologyInspector inspector{ model };
                 return inspector.inspect_structural_model_geology();
-            } );
+            },
+            pybind11::arg( "model" ), ReleaseGil(),
+            "Inspect the geology of the StructuralModel with a "
+            "StructuralModelGeologyInspector and return the "
+            "StructuralModelGeologyInspectionResult" );
     }
 } // namespace geode

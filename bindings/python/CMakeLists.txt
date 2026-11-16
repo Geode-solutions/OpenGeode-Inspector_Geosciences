@@ -26,6 +26,7 @@ add_geode_python_wheel(
         "Open source inspector for Geosciences objects"
     MODULES
         "geosciences_inspection.py"
+    DOCUMENTATION "${CMAKE_CURRENT_SOURCE_DIR}/opengeode_inspector_geosciences_doc.txt"
     LICENSE "MIT"
 )
 

@@ -25,34 +25,50 @@
 
 #include <geode/inspector_geosciences/inspection/structural_model_inspection.hpp>
 
+#include <geode/inspector/bindings/python/inspection_helpers.hpp>
+
 namespace geode
 {
     void define_structural_model_inspector( pybind11::module& module )
     {
-        pybind11::class_< StructuralModelInspectionResult >(
-            module, "StructuralModelInspectionResult" )
-            .def( pybind11::init<>() )
-            .def_readwrite( "brep", &StructuralModelInspectionResult::brep )
-            .def_readwrite(
-                "geology", &StructuralModelInspectionResult::geology )
-            .def( "nb_issues", &StructuralModelInspectionResult::nb_issues )
-            .def( "string", &StructuralModelInspectionResult::string )
-            .def( "__str__", &StructuralModelInspectionResult::string )
-            .def( "__repr__", &issues_repr< StructuralModelInspectionResult > )
-            .def( "inspection_type",
-                &StructuralModelInspectionResult::inspection_type );
+        auto result =
+            define_inspection_result< StructuralModelInspectionResult >( module,
+                "StructuralModelInspectionResult",
+                "Result of the inspection of a StructuralModel: the "
+                "inspection of its BRep and of its geology" );
+        INSPECTION_RESULT_MEMBER( result, StructuralModelInspectionResult, brep,
+            "BRepInspectionResult: the inspection of the meshes and of the "
+            "topology of the model" );
+        INSPECTION_RESULT_MEMBER( result, StructuralModelInspectionResult,
+            geology,
+            "StructuralModelGeologyInspectionResult: the inspection of the "
+            "geology of the model" );
 
         pybind11::class_< StructuralModelInspector, BRepInspector,
-            StructuralModelGeologyInspector >(
-            module, "StructuralModelInspector" )
-            .def( pybind11::init< const StructuralModel& >() )
+            StructuralModelGeologyInspector >( module,
+            "StructuralModelInspector", pybind11::dynamic_attr(),
+            "Complete inspection of a StructuralModel: the inspection of its "
+            "BRep (BRepInspector) and of its geology "
+            "(StructuralModelGeologyInspector), whose methods it also has" )
+            .def( pybind11::init< const StructuralModel& >(),
+                pybind11::arg( "model" ), pybind11::keep_alive< 1, 2 >(),
+                remember_model(), ReleaseGil(),
+                "Create the inspector of this StructuralModel. The inspector "
+                "keeps the model alive" )
             .def( "inspect_structural_model",
-                &StructuralModelInspector::inspect_structural_model );
+                &StructuralModelInspector::inspect_structural_model,
+                ReleaseGil(),
+                "Return the StructuralModelInspectionResult: the inspection "
+                "of the BRep and of the geology of the model" );
 
         module.def(
-            "inspect_structural_model", []( const StructuralModel& model ) {
-                StructuralModelInspector inspector{ model };
+            "inspect_structural_model",
+            []( const StructuralModel& model ) {
+                const StructuralModelInspector inspector{ model };
                 return inspector.inspect_structural_model();
-            } );
+            },
+            pybind11::arg( "model" ), ReleaseGil(),
+            "Inspect the StructuralModel with a StructuralModelInspector and "
+            "return the StructuralModelInspectionResult" );
     }
 } // namespace geode
